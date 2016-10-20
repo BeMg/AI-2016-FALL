@@ -225,9 +225,49 @@ def aStarSearch(problem, heuristic=nullHeuristic):
   from util import PriorityQueue
 
   try:
-      
+      corners = problem.getCorners()
+      corners = heuristic(problem.getStartState(), problem)
+      start = problem.getStartState()
+
+      pq = PriorityQueue()
+      pq.push(start,0)
+
+
+      path = {}
+      path[start] = []
+
+      dist = {}
+      dist[start] = 0
+
+      for next_goal in corners:
+          while not pq.isEmpty():
+              curr = pq.pop()
+
+              if curr == next_goal:
+                  while not pq.isEmpty():
+                      pq.pop()
+                  pq.push(curr,0)
+                  tmp = path[curr]
+                  path.clear()
+                  path[curr] = tmp
+                  dist.clear()
+                  dist[curr] = 0
+                  break
+
+              for nxt in problem.getSuccessors(curr):
+
+                  if nxt[0] not in dist:
+                      dist[nxt[0]] = 2 ** 64
+
+                  if dist[nxt[0]] > dist[curr] + nxt[2]:
+                      dist[nxt[0]] = dist[curr] + nxt[2]
+                      path[nxt[0]] = path[curr] + [nxt[1]]
+                      pq.push(nxt[0], dist[nxt[0]])
+
+      return path[corners[3]]
 
   except:
+
       pq = PriorityQueue()
 
       pq.push(problem.getStartState(),0)
@@ -257,6 +297,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                   tmp = dist[nxt[0]]+heuristic(nxt[0],problem)
                   pq.push(nxt[0],tmp)
 
+      return path[goal]
 
   util.raiseNotDefined()
 
