@@ -356,7 +356,26 @@ def cornersHeuristic(state, problem):
   corners = problem.corners # These are the corner coordinates
   walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
+  from itertools import permutations
+
+  ans = ([],2**64)
+
+  start = problem.getStartState()
+
+  for permutation in permutations(corners):
+      curr_node = start
+      cost = 0
+      for i in permutation:
+          cost+= abs(i[0]-curr_node[0]) + abs(i[1]-curr_node[1])
+          curr_node = i
+
+      if ans[1] > cost:
+          ans = (permutation, cost)
+
+  return ans[0]
+
   "*** YOUR CODE HERE ***"
+
   return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):

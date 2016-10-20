@@ -224,34 +224,38 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
   from util import PriorityQueue
 
-  pq = PriorityQueue()
+  try:
+      
 
-  pq.push(problem.getStartState(),0)
+  except:
+      pq = PriorityQueue()
 
-  dist = {}
-  dist[problem.getStartState()] = 0
+      pq.push(problem.getStartState(),0)
 
-  path = {}
-  path[problem.getStartState()] = []
+      dist = {}
+      dist[problem.getStartState()] = 0
 
-  goal = ()
+      path = {}
+      path[problem.getStartState()] = []
 
-  while not pq.isEmpty():
+      goal = ()
 
-      curr = pq.pop()
+      while not pq.isEmpty():
 
-      if problem.isGoalState(curr) is True:
-          goal = curr
-          return path[goal]
+          curr = pq.pop()
 
-      for nxt in problem.getSuccessors(curr):
-          if nxt[0] not in dist:
-              dist[nxt[0]] = 2**64
-          if dist[nxt[0]] > dist[curr] + nxt[2]:
-              dist[nxt[0]] = dist[curr] + nxt[2]
-              path[nxt[0]] = path[curr] + [nxt[1]]
-              tmp = dist[nxt[0]]+heuristic(nxt[0],problem)
-              pq.push(nxt[0],tmp)
+          if problem.isGoalState(curr) is True:
+              goal = curr
+              return path[goal]
+
+          for nxt in problem.getSuccessors(curr):
+              if nxt[0] not in dist:
+                  dist[nxt[0]] = 2**64
+              if dist[nxt[0]] > dist[curr] + nxt[2]:
+                  dist[nxt[0]] = dist[curr] + nxt[2]
+                  path[nxt[0]] = path[curr] + [nxt[1]]
+                  tmp = dist[nxt[0]]+heuristic(nxt[0],problem)
+                  pq.push(nxt[0],tmp)
 
 
   util.raiseNotDefined()
