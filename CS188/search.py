@@ -112,63 +112,23 @@ def breadthFirstSearch(problem):
   from util import Queue
   from itertools import permutations
 
+  q = Queue()
+  q.push((problem.getStartState(),[]))
 
-  try:
-      ans = []
-      corners = problem.getCorners()
+  used = {}
 
-      for permutation in permutations(corners):
-          q = Queue()
-          q.push((problem.getStartState(),[]))
+  while not q.isEmpty():
+      curr = q.pop()
 
-          used = {}
+      if curr[0] in used:
+          continue
+      used[curr[0]] = 1
 
-          goal = permutation[0]
+      if problem.isGoalState(curr[0]) is True:
+          return curr[1]
 
-          while not q.isEmpty():
-
-              curr = q.pop()
-
-              if curr[0] == goal:
-                  used.clear()
-                  permutation = [i for i in permutation if i!=permutation[0]]
-                  while not q.isEmpty():
-                      q.pop()
-                  q.push(curr)
-                  if len(permutation) == 0:
-                      if len(ans) == 0 or len(curr[1])<len(ans):
-                          ans = curr[1]
-                      break
-                  goal = permutation[0]
-
-              if curr[0] in used:
-                  continue
-              used[curr[0]] = 1
-
-              for nxt in problem.getSuccessors(curr[0]):
-                  q.push((nxt[0],curr[1]+[nxt[1]]))
-
-      return ans
-
-
-  except:
-      q = Queue()
-      q.push((problem.getStartState(),[]))
-
-      used = {}
-
-      while not q.isEmpty():
-          curr = q.pop()
-
-          if curr[0] in used:
-              continue
-          used[curr[0]] = 1
-
-          if problem.isGoalState(curr[0]) is True:
-              return curr[1]
-
-          for nxt in problem.getSuccessors(curr[0]):
-              q.push((nxt[0],curr[1]+[nxt[1]]))
+      for nxt in problem.getSuccessors(curr[0]):
+          q.push((nxt[0],curr[1]+[nxt[1]]))
 
   util.raiseNotDefined()
 
@@ -177,8 +137,6 @@ def uniformCostSearch(problem):
   "*** YOUR CODE HERE ***"
 
   from util import PriorityQueue
-
-
 
   pq = PriorityQueue()
 
@@ -224,80 +182,36 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
   from util import PriorityQueue
 
-  try:
-      corners = problem.getCorners()
-      corners = heuristic(problem.getStartState(), problem)
-      start = problem.getStartState()
+  pq = PriorityQueue()
 
-      pq = PriorityQueue()
-      pq.push(start,0)
+  pq.push(problem.getStartState(),0)
 
+  dist = {}
+  dist[problem.getStartState()] = 0
 
-      path = {}
-      path[start] = []
+  path = {}
+  path[problem.getStartState()] = []
 
-      dist = {}
-      dist[start] = 0
+  goal = ()
 
-      for next_goal in corners:
-          while not pq.isEmpty():
-              curr = pq.pop()
+  while not pq.isEmpty():
 
-              if curr == next_goal:
-                  while not pq.isEmpty():
-                      pq.pop()
-                  pq.push(curr,0)
-                  tmp = path[curr]
-                  path.clear()
-                  path[curr] = tmp
-                  dist.clear()
-                  dist[curr] = 0
-                  break
+      curr = pq.pop()
 
-              for nxt in problem.getSuccessors(curr):
+      if problem.isGoalState(curr) is True:
+          goal = curr
+          return path[goal]
 
-                  if nxt[0] not in dist:
-                      dist[nxt[0]] = 2 ** 64
+      for nxt in problem.getSuccessors(curr):
+          if nxt[0] not in dist:
+              dist[nxt[0]] = 2**64
+          if dist[nxt[0]] > dist[curr] + nxt[2]:
+              dist[nxt[0]] = dist[curr] + nxt[2]
+              path[nxt[0]] = path[curr] + [nxt[1]]
+              tmp = dist[nxt[0]]+heuristic(nxt[0],problem)
+              pq.push(nxt[0],tmp)
 
-                  if dist[nxt[0]] > dist[curr] + nxt[2]:
-                      dist[nxt[0]] = dist[curr] + nxt[2]
-                      path[nxt[0]] = path[curr] + [nxt[1]]
-                      pq.push(nxt[0], dist[nxt[0]])
-
-      return path[corners[3]]
-
-  except:
-
-      pq = PriorityQueue()
-
-      pq.push(problem.getStartState(),0)
-
-      dist = {}
-      dist[problem.getStartState()] = 0
-
-      path = {}
-      path[problem.getStartState()] = []
-
-      goal = ()
-
-      while not pq.isEmpty():
-
-          curr = pq.pop()
-
-          if problem.isGoalState(curr) is True:
-              goal = curr
-              return path[goal]
-
-          for nxt in problem.getSuccessors(curr):
-              if nxt[0] not in dist:
-                  dist[nxt[0]] = 2**64
-              if dist[nxt[0]] > dist[curr] + nxt[2]:
-                  dist[nxt[0]] = dist[curr] + nxt[2]
-                  path[nxt[0]] = path[curr] + [nxt[1]]
-                  tmp = dist[nxt[0]]+heuristic(nxt[0],problem)
-                  pq.push(nxt[0],tmp)
-
-      return path[goal]
+  return path[goal]
 
   util.raiseNotDefined()
 
