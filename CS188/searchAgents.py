@@ -326,6 +326,8 @@ class CornersProblem(search.SearchProblem):
           if (nextx, nexty) not in corner:
               corner.append((nextx, nexty))
 
+      corner.sort()
+
       if hitsWall is False:
           nextState = ((nextx, nexty),tuple(corner))
           successors.append((nextState, action, 1))
