@@ -284,13 +284,15 @@ class CornersProblem(search.SearchProblem):
   def getStartState(self):
     "Returns the start state (in your state space, not the full Pacman state space)"
     "*** YOUR CODE HERE ***"
-    return self.startingPosition
+    return (self.startingPosition,())
     util.raiseNotDefined()
 
   def isGoalState(self, state):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
-    return 0
+    if len(state[1]) is 4:
+        return True
+    return False
     util.raiseNotDefined()
 
   def getSuccessors(self, state):
@@ -313,13 +315,18 @@ class CornersProblem(search.SearchProblem):
       #   nextx, nexty = int(x + dx), int(y + dy)
       #   hitsWall = self.walls[nextx][nexty]
       "*** YOUR CODE HERE ***"
-      x, y = state
+      x, y = state[0]
       dx, dy = Actions.directionToVector(action)
       nextx, nexty = int(x + dx), int(y + dy)
       hitsWall = self.walls[nextx][nexty]
+      corner = list(state[1])
+
+      if (nextx, nexty) in self.corners:
+          if (nextx, nexty) not in corner:
+              corner.append((nextx, nexty))
 
       if hitsWall is False:
-          nextState = (nextx, nexty)
+          nextState = ((nextx, nexty),tuple(corner))
           successors.append((nextState, action, 1))
 
     self._expanded += 1
@@ -355,24 +362,6 @@ def cornersHeuristic(state, problem):
   """
   corners = problem.corners # These are the corner coordinates
   walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
-  from itertools import permutations
-
-  ans = ([],2**64)
-
-  start = problem.getStartState()
-
-  for permutation in permutations(corners):
-      curr_node = start
-      cost = 0
-      for i in permutation:
-          cost+= abs(i[0]-curr_node[0]) + abs(i[1]-curr_node[1])
-          curr_node = i
-
-      if ans[1] > cost:
-          ans = (permutation, cost)
-
-  return ans[0]
 
   "*** YOUR CODE HERE ***"
 
