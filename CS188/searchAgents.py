@@ -366,14 +366,35 @@ def cornersHeuristic(state, problem):
   corners = problem.corners # These are the corner coordinates
   walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
+
   corners_not_visited = [i for i in corners if i not in state[1]]
+
+  if len(corners_not_visited) == 0:
+      return 0
 
   cost = 0
 
-  for corner in corners_not_visited:
-      cost = max(cost, abs(state[0][0]-corner[0])+abs(state[0][1]-corner[1]))
+  def manhattan(a, b):
+      return abs(a[0]-b[0])+abs(a[1]-b[1])
+
+  # for corner in corners_not_visited:
+  #     cost = max(cost, manhattan(state[0],corner))
+
+  from itertools import permutations
+
+  cost = 2**64
+
+  for corners in permutations(corners_not_visited):
+      curr = state[0]
+      tmp_cost = 0
+      for corner in corners:
+          tmp_cost+=manhattan(curr, corner)
+          curr = corner
+      cost = min(cost, tmp_cost)
 
   return cost
+
+
 
 
   "*** YOUR CODE HERE ***"
