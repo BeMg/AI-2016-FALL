@@ -29,28 +29,60 @@ table_for_dfs mark_fail(table_for_dfs curr, int x, int y) {
     
 }
 
-int DFS(table_for_dfs curr, int now_row) {
+string tabletostring(table_for_dfs curr) {
+    string result;
+    int size = curr.size;
+    for(int i=0; i<size; i++) {
+	for(int j=0; j<size; j++) {
+	    if(curr.table[i][j] == 1) {
+		result.push_back('0'+j);
+		break;
+	    }
+	}
+    }
+    return result;
+}
+
+string DFS(table_for_dfs curr, int now_row) {
     int size = curr.size;
 
     if(now_row == size) {
-	return 1;
+	return tabletostring(curr);
     }
 
     for(int i=0; i<size; i++) {
 
 	if(curr.table[now_row][i] == 0) {
 	   table_for_dfs tmp = mark_fail(curr, now_row, i);
-	   int ret = DFS(tmp, now_row+1);
-	   if(ret) return 1;
+	   string ret = DFS(tmp, now_row+1);
+	   if(!ret.empty()) return ret;
 	}
     
     }
-    return 0;
+    return "";
+}
+
+string solve_by_dfs(int size) {
+    if(size>MAX_TABLE_SIZE) {
+	cout << "Size MUST less than" << MAX_TABLE_SIZE << endl;
+	cout << "DFS solve fail." << endl;
+	return "";
+    }
+    
+    table_for_dfs s;
+
+    s.size = size;
+    memset(s.table, 0, sizeof(s.table));
+    
+    string result = DFS(s,0);
+    
+    return result;
 }
 
 
 int main() {
-
+    
+    cout << solve_by_dfs(8) << endl;
 
     return 0;
 }
