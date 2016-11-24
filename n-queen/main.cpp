@@ -29,13 +29,13 @@ table_for_dfs mark_fail(table_for_dfs curr, int x, int y) {
     
 }
 
-string tabletostring(table_for_dfs curr) {
-    string result;
+vector<int> tabletostring(table_for_dfs curr) {
+    vector<int> result;
     int size = curr.size;
     for(int i=0; i<size; i++) {
 	for(int j=0; j<size; j++) {
 	    if(curr.table[i][j] == 1) {
-		result.push_back('0'+j);
+		result.push_back(j);
 		break;
 	    }
 	}
@@ -43,7 +43,7 @@ string tabletostring(table_for_dfs curr) {
     return result;
 }
 
-string DFS(table_for_dfs curr, int now_row) {
+vector<int> DFS(table_for_dfs curr, int now_row) {
     int size = curr.size;
 
     if(now_row == size) {
@@ -54,19 +54,21 @@ string DFS(table_for_dfs curr, int now_row) {
 
 	if(curr.table[now_row][i] == 0) {
 	   table_for_dfs tmp = mark_fail(curr, now_row, i);
-	   string ret = DFS(tmp, now_row+1);
+	   vector<int> ret = DFS(tmp, now_row+1);
 	   if(!ret.empty()) return ret;
 	}
     
     }
-    return "";
+    vector<int> emp;
+    return emp;
 }
 
-string solve_by_dfs(int size) {
+vector<int> solve_by_dfs(int size) {
     if(size>MAX_TABLE_SIZE) {
 	cout << "Size MUST less than" << MAX_TABLE_SIZE << endl;
 	cout << "DFS solve fail." << endl;
-	return "";
+	vector<int> emp;
+	return emp;
     }
     
     table_for_dfs s;
@@ -74,7 +76,7 @@ string solve_by_dfs(int size) {
     s.size = size;
     memset(s.table, 0, sizeof(s.table));
     
-    string result = DFS(s,0);
+    vector<int> result = DFS(s,0);
     
     return result;
 }
@@ -85,11 +87,12 @@ int main() {
     int n;
     cin >> n;
     
-    string ans = solve_by_dfs(n);
+    vector<int> ans = solve_by_dfs(n);
 
-    for(int i=0; i<n; i++) {
-	cout << (int)(ans[i]-'0') << "\n";
+    for(auto i: ans) {
+	cout << i << " ";
     }
+    cout << endl;
 
     return 0;
 }
