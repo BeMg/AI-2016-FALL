@@ -82,7 +82,14 @@ string solve_by_dfs(int size) {
 
 int main() {
     
-    cout << solve_by_dfs(8) << endl;
+    int n;
+    cin >> n;
+    
+    string ans = solve_by_dfs(n);
+
+    for(int i=0; i<n; i++) {
+	cout << (int)(ans[i]-'0') << "\n";
+    }
 
     return 0;
 }
