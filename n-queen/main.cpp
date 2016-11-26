@@ -123,8 +123,24 @@ int attack_of_number(vector<int> curr) {
 
 }
 
-vector<int> hc(vector<int> curr) {
+vector<int> random_generate(int size) {
+    
+    vector<int> v;
 
+    for(int i=0; i<size; i++) {
+	v.push_back(i);
+    }
+    
+    for(int i=0; i<size; i++) {
+	int j = i+rand()%(size-i);
+	swap(v[i],v[j]);
+    }
+    
+    return v;
+}
+
+vector<int> hc(vector<int> curr) {
+    
 }
 
 int solve_by_hc(int size, int times) {
@@ -134,10 +150,12 @@ int solve_by_hc(int size, int times) {
 
 int main() {
 
+    srand(time(NULL));
+
     int n;
     cin >> n;
 
-    vector<int> ans = solve_by_dfs(n);
+    vector<int> ans = random_generate(n);
 
     for(auto i: ans)
 	cout << i << " ";
