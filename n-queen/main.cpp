@@ -81,6 +81,55 @@ vector<int> solve_by_dfs(int size) {
     return result;
 }
 
+int attack_of_number(vector<int> curr) {
+
+    int size = curr.size();
+    int table[size][size];
+    memset(table, 0, sizeof(table));
+
+    for(int i=0; i<n; i++) {
+	table[i][curr[i]] = 1;
+    }
+    
+    int cut = 0;
+
+    for(int i=0; i<n; i++) {
+	int x = i;
+	int y = curr[i];
+	for(int j=0; j<n; j++) {
+	    if(x+j<size && y+j<size && table[x+j][y+j]) {
+		cnt++;
+	    }
+	    if(x-j>=0 && y-j>=0 && table[x+j][y+j]) {
+		cnt++;
+	    }
+	    if(x+j<size && y-j>=0 && table[x+j][y+j]) {
+		cnt++;
+	    }
+	    if(x-j>=0 && y+j<size && table[x+j][y+j]) {
+		cnt++;
+	    }
+	    if(table[x][j] && j!=y) {
+		cnt++;
+	    }
+	    if(table[j][y] && j!=x) {
+		cnt++;
+	    }
+	}
+    }
+    
+    return cnt;
+
+}
+
+vector<int> hc(vector<int> curr) {
+    
+}
+
+int solve_by_hc(int size, int times) {
+    
+}
+
 
 int main() {
     
@@ -93,6 +142,7 @@ int main() {
 	cout << i << " ";
     }
     cout << endl;
+
 
     return 0;
 }
