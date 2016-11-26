@@ -96,7 +96,6 @@ int attack_of_number(vector<int> curr) {
     for(int i=0; i<size; i++) {
 	int x = i;
 	int y = curr[i];
-	printf("%d %d\n",x,y);
 	for(int j=1; j<size; j++) {
 	    if(x+j<size && y+j<size && table[x+j][y+j]) {
 		cnt++;
@@ -140,11 +139,42 @@ vector<int> random_generate(int size) {
 }
 
 vector<int> hc(vector<int> curr) {
+
+    int size = curr.size();
+
+    while(1) {
+	
+	int curr_value = attack_of_number(curr);
+	
+	vector<int> next;
+
+	int next_value = INT_MAX;
+
+	for(int i=1; i<size; i++) {
+	    
+	    vector<int> tmp = curr;
+	    swap(tmp[i],tmp[i-1]);
+	    if(next_value > attack_of_number(tmp)) {
+		next_value = attack_of_number(tmp);
+		next.clear();
+		next = tmp;
+	    }
+	
+	}
     
+	if(next_value <= curr_value) {
+	    curr_value = next_value;
+	    curr = next;
+	}else {
+	    return curr;
+	}
+	 
+    }
+
 }
 
 int solve_by_hc(int size, int times) {
-
+    
 }
 
 
