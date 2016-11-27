@@ -156,6 +156,7 @@ vector<int> random_generate(int size) {
 
 vector<int> hc(int size) {
 
+    mp.clear();
     vector<int> curr = random_generate(size);
 
     while(1) {
@@ -282,7 +283,7 @@ vector<int> GA(int size, int group, int round) {
 		
 		vector<int> NEW = crossover(NEW_G[i],NEW_G[j]);
 
-		if(rand()%100 < i) {
+		if(rand()%100 < max(i,8)) {
 		    NEW = mutation(NEW);
 		}
 		
@@ -332,8 +333,7 @@ int main() {
 
 
     int n,k;
-    n = 50;
-    k = 100;
+    cin >> n >> k;
 
     cout << solve_by_GA(n,k) << "/" << k << endl;
 
