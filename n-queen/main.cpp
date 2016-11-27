@@ -282,7 +282,7 @@ vector<int> GA(int size, int group, int round) {
 		
 		vector<int> NEW = crossover(NEW_G[i],NEW_G[j]);
 
-		if(rand()%100 < 15) {
+		if(rand()%100 < i) {
 		    NEW = mutation(NEW);
 		}
 		
