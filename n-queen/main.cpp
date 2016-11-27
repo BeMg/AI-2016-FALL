@@ -138,9 +138,9 @@ vector<int> random_generate(int size) {
     return v;
 }
 
-vector<int> hc(vector<int> curr) {
+vector<int> hc(int size) {
 
-    int size = curr.size();
+    vector<int> curr = random_generate(size);
 
     while(1) {
 
@@ -152,7 +152,7 @@ vector<int> hc(vector<int> curr) {
 
 	for(int i=0; i<size; i++) {
 
-	    for(int j=1; j<=2; j++) {
+	    for(int j=1; j<=size/3; j++) {
 		vector<int> tmp = curr;
 		swap(tmp[i],tmp[(i+j)%size]);
 		if(next_value > attack_of_number(tmp)) {
@@ -179,13 +179,31 @@ int solve_by_hc(int size, int times) {
     int cnt = 0;
 
     for(int i=0; i<times; i++) {
-	if(attack_of_number(hc(random_generate(size))) == 0) {
+	cout << "Round: " << i+1 << endl;
+	if(attack_of_number(hc(size)) == 0) {
 	    cnt++;
 	}
     }
 
     return cnt;
 }
+
+vector<int> mutation(vector<int> curr) {
+
+}
+
+vector<int> crossover(vector<int> a, vector<int> b) {
+    
+}
+
+vector<int> GA(int group, int round) {
+
+}
+
+int solve_by_GA(int size, int times) {
+    
+}
+
 
 
 int main() {
@@ -194,7 +212,7 @@ int main() {
 
 
     int n,k;
-    n = 8;
+    n = 50;
     k = 100;
 
     cout << solve_by_hc(n,k) << "/" << k << endl;
