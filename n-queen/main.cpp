@@ -162,7 +162,7 @@ vector<int> hc(vector<int> curr) {
 	
 	}
     
-	if(next_value <= curr_value) {
+	if(next_value < curr_value) {
 	    curr_value = next_value;
 	    curr = next;
 	}else {
@@ -174,24 +174,20 @@ vector<int> hc(vector<int> curr) {
 }
 
 int solve_by_hc(int size, int times) {
-    
+         
 }
 
 
 int main() {
 
     srand(time(NULL));
+    
 
-    int n;
-    cin >> n;
-
-    vector<int> ans = random_generate(n);
-
-    for(auto i: ans)
-	cout << i << " ";
-    cout << endl;
-
-    cout << attack_of_number(ans) << endl;
+    int n,k;
+    cin >> n >> k;
+    
+    for(int i=0; i<k; i++)
+	cout << attack_of_number(hc(random_generate(n))) << endl;
 
     return 0;
 }
