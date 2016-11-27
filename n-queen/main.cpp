@@ -8,6 +8,8 @@ struct table_for_dfs {
     int table[MAX_TABLE_SIZE][MAX_TABLE_SIZE];
 };
 
+map<vector<int>, int> mp;
+
 table_for_dfs mark_fail(table_for_dfs curr, int x, int y) {
     int size = curr.size;
 
@@ -83,6 +85,14 @@ vector<int> solve_by_dfs(int size) {
 
 int attack_of_number(vector<int> curr) {
 
+    if(mp[curr] !=0) {
+	if(mp[curr] == -1) {
+	    return 0;
+	} else {
+	    return mp[curr];
+	}
+    }
+    
     int size = curr.size();
     int table[size][size];
     memset(table, 0, sizeof(table));
@@ -117,7 +127,13 @@ int attack_of_number(vector<int> curr) {
 		cnt++;
 	}
     }
-
+    
+    if(cnt == 0) {
+	mp[curr] = -1;
+    }else {
+	mp[curr] = cnt;
+    }
+    
     return cnt;
 
 }
@@ -152,7 +168,7 @@ vector<int> hc(int size) {
 
 	for(int i=0; i<size; i++) {
 
-	    for(int j=1; j<=size/3; j++) {
+	    for(int j=1; j<=size/2; j++) {
 		vector<int> tmp = curr;
 		swap(tmp[i],tmp[(i+j)%size]);
 		if(next_value > attack_of_number(tmp)) {
@@ -189,19 +205,123 @@ int solve_by_hc(int size, int times) {
 }
 
 vector<int> mutation(vector<int> curr) {
-
-}
-
-vector<int> crossover(vector<int> a, vector<int> b) {
     
-}
-
-vector<int> GA(int group, int round) {
-
-}
-
-int solve_by_GA(int size, int times) {
     
+    int size = curr.size();
+
+    int s = rand()%size;
+    int e = rand()%size;
+
+    swap(curr[s], curr[e]);
+
+    return curr;
+
+}
+
+vector<int> crossover(const vector<int> &a, const vector<int> &b) {
+    int size = a.size();
+
+    int start = rand()%size;
+
+    vector<int> c(size);
+    fill(c.begin(), c.end(), -1);
+    int used[size];
+    fill(used, used+size, 0);
+
+
+    for(int i=0; i<size/2; i++) {
+	int idx = (start+i)%size;
+	c[idx] = a[idx];
+	used[c[idx]] = 1;
+    }
+
+
+    int cnt_b, cnt_c;
+    cnt_b = cnt_c = 0;
+
+    while(cnt_b<size && cnt_c<size) {
+	if(c[cnt_c] != -1) {
+	    cnt_c++;
+	}
+	else if(used[b[cnt_b]] == 1) {
+	    cnt_b++;
+	}else {
+	    c[cnt_c] = b[cnt_b];
+	    cnt_c++;
+	    cnt_b++;
+	}
+    }
+
+    return c;
+
+}
+
+bool cmp(const vector<int> a, const vector<int> b) {
+    return attack_of_number(a)<attack_of_number(b);
+}
+
+vector<int> GA(int size, int group, int round) {
+    vector< vector<int> > G;
+
+
+    for(int i=0; i<group; i++) {
+	G.push_back(random_generate(size));
+    }
+
+
+    while(round--) {
+
+
+	vector< vector<int> > NEW_G = G;
+	G.clear();
+	
+
+	for(int i=0; i<size; i++) {
+	    for(int j=0; j<size; j++) {
+		if(i==j) continue;
+		
+		vector<int> NEW = crossover(NEW_G[i],NEW_G[j]);
+
+		if(rand()%100 < 15) {
+		    NEW = mutation(NEW);
+		}
+		
+		NEW_G.push_back(NEW);
+
+	    }
+	}
+
+
+	sort(NEW_G.begin(), NEW_G.end(), cmp);
+    
+	if(attack_of_number(NEW_G[0]) == 0) {
+	    return NEW_G[0];
+	}
+
+	for(int i=0; i<group; i++) {
+	    G.push_back(NEW_G[i]);
+	}
+
+    }
+    
+    return G[0];
+
+}
+
+int solve_by_GA(int size, int times, int group = 100, int round = 100) {
+    int cnt = 0;
+    
+
+    for(int i=0; i<times; i++) {
+	cout << "Round: " << i+1 << endl;
+	if(attack_of_number(GA(size, group, round)) == 0) {
+	    cnt++;
+	}else {
+	
+	}
+    }
+
+    return cnt;
 }
 
 
@@ -212,10 +332,10 @@ int main() {
 
 
     int n,k;
-    n = 50;
+    n = 8;
     k = 100;
 
-    cout << solve_by_hc(n,k) << "/" << k << endl;
+    cout << solve_by_GA(n,k) << "/" << k << endl;
 
     return 0;
 }
