@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <climits>
+#include <cstring>
 using namespace std;
 
 const int MAX_TABLE_SIZE = 50;
