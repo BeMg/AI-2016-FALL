@@ -288,9 +288,7 @@ vector<int> GA(int size, int group, int round) {
 		
 		vector<int> NEW = crossover(NEW_G[i],NEW_G[j]);
 
-		if(rand()%100 < max(i,8)) {
-		    NEW = mutation(NEW);
-		}
+		NEW = mutation(NEW);
 		
 		NEW_G.push_back(NEW);
 
@@ -314,17 +312,23 @@ vector<int> GA(int size, int group, int round) {
 
 }
 
-int solve_by_GA(int size, int times, int group = 100, int round = 100) {
+int solve_by_GA(int size, int times, int group = 200, int round = 100) {
     int cnt = 0;
     
 
     for(int i=0; i<times; i++) {
-	cout << "Round: " << i+1 << endl;
-	if(attack_of_number(GA(size, group, round)) == 0) {
+	cout << "Round: " << i+1 << " ";
+	vector<int> v = GA(size, group, round);
+	if(attack_of_number(v) == 0) {
 	    cnt++;
+	    cout << "YES\n";
 	}else {
-	
+	    cout << "NO\n";
 	}
+	for(auto i: v) {
+	    cout << i << " ";
+	}
+	cout << endl;
     }
 
     return cnt;
