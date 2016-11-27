@@ -123,18 +123,18 @@ int attack_of_number(vector<int> curr) {
 }
 
 vector<int> random_generate(int size) {
-    
+
     vector<int> v;
 
     for(int i=0; i<size; i++) {
 	v.push_back(i);
     }
-    
+
     for(int i=0; i<size; i++) {
 	int j = i+rand()%(size-i);
 	swap(v[i],v[j]);
     }
-    
+
     return v;
 }
 
@@ -143,51 +143,61 @@ vector<int> hc(vector<int> curr) {
     int size = curr.size();
 
     while(1) {
-	
+
 	int curr_value = attack_of_number(curr);
-	
+
 	vector<int> next;
 
 	int next_value = INT_MAX;
 
-	for(int i=1; i<size; i++) {
-	    
-	    vector<int> tmp = curr;
-	    swap(tmp[i],tmp[i-1]);
-	    if(next_value > attack_of_number(tmp)) {
-		next_value = attack_of_number(tmp);
-		next.clear();
-		next = tmp;
+	for(int i=0; i<size; i++) {
+
+	    for(int j=1; j<=2; j++) {
+		vector<int> tmp = curr;
+		swap(tmp[i],tmp[(i+j)%size]);
+		if(next_value > attack_of_number(tmp)) {
+		    next_value = attack_of_number(tmp);
+		    next.clear();
+		    next = tmp;
+		}
 	    }
-	
+
 	}
-    
+
 	if(next_value < curr_value) {
 	    curr_value = next_value;
 	    curr = next;
 	}else {
 	    return curr;
 	}
-	 
+
     }
 
 }
 
 int solve_by_hc(int size, int times) {
-         
+    int cnt = 0;
+
+    for(int i=0; i<times; i++) {
+	if(attack_of_number(hc(random_generate(size))) == 0) {
+	    cnt++;
+	}
+    }
+
+    return cnt;
 }
 
 
 int main() {
 
     srand(time(NULL));
-    
+
 
     int n,k;
-    cin >> n >> k;
-    
-    for(int i=0; i<k; i++)
-	cout << attack_of_number(hc(random_generate(n))) << endl;
+    n = 8;
+    k = 100;
+
+    cout << solve_by_hc(n,k) << "/" << k << endl;
 
     return 0;
 }
