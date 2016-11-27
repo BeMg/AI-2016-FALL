@@ -332,7 +332,7 @@ int main() {
 
 
     int n,k;
-    n = 8;
+    n = 50;
     k = 100;
 
     cout << solve_by_GA(n,k) << "/" << k << endl;
