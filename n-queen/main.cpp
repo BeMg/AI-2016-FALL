@@ -97,7 +97,7 @@ int attack_of_number(vector<int> curr) {
 	    return mp[curr];
 	}
     }
-    
+
     int size = curr.size();
     int table[size][size];
     memset(table, 0, sizeof(table));
@@ -132,13 +132,13 @@ int attack_of_number(vector<int> curr) {
 		cnt++;
 	}
     }
-    
+
     if(cnt == 0) {
 	mp[curr] = -1;
     }else {
 	mp[curr] = cnt;
     }
-    
+
     return cnt;
 
 }
@@ -197,22 +197,26 @@ vector<int> hc(int size) {
 
 }
 
-int solve_by_hc(int size, int times) {
+int solve_by_hc(int size, int times, int &atk) {
     int cnt = 0;
 
     for(int i=0; i<times; i++) {
-	cout << "Round: " << i+1 << endl;
-	if(attack_of_number(hc(size)) == 0) {
+	int atk_tmp = attack_of_number(hc(size));
+	atk+=atk_tmp;
+	if(atk_tmp == 0) {
 	    cnt++;
+	    cout << "YES" << endl;
+	}else {
+	    cout << "NO" << endl;
 	}
+	
     }
 
     return cnt;
 }
 
 vector<int> mutation(vector<int> curr) {
-    
-    
+
     int size = curr.size();
 
     int s = rand()%size;
@@ -274,22 +278,21 @@ vector<int> GA(int size, int group, int round) {
 	G.push_back(random_generate(size));
     }
 
+    sort(G.begin(), G.end(), cmp);
 
     while(round--) {
 
-
 	vector< vector<int> > NEW_G = G;
-	G.clear();
-	
+	G.clear();	
 
 	for(int i=0; i<size; i++) {
 	    for(int j=0; j<size; j++) {
 		if(i==j) continue;
-		
+
 		vector<int> NEW = crossover(NEW_G[i],NEW_G[j]);
 
 		NEW = mutation(NEW);
-		
+
 		NEW_G.push_back(NEW);
 
 	    }
@@ -297,7 +300,7 @@ vector<int> GA(int size, int group, int round) {
 
 
 	sort(NEW_G.begin(), NEW_G.end(), cmp);
-    
+
 	if(attack_of_number(NEW_G[0]) == 0) {
 	    return NEW_G[0];
 	}
@@ -307,28 +310,24 @@ vector<int> GA(int size, int group, int round) {
 	}
 
     }
-    
+
     return G[0];
 
 }
 
-int solve_by_GA(int size, int times, int group = 200, int round = 100) {
+int solve_by_GA(int size, int times, int &atk, int group = 50, int round = 100) {
     int cnt = 0;
-    
+
 
     for(int i=0; i<times; i++) {
-	cout << "Round: " << i+1 << " ";
 	vector<int> v = GA(size, group, round);
+	atk+=attack_of_number(v);
 	if(attack_of_number(v) == 0) {
 	    cnt++;
 	    cout << "YES\n";
 	}else {
 	    cout << "NO\n";
 	}
-	for(auto i: v) {
-	    cout << i << " ";
-	}
-	cout << endl;
     }
 
     return cnt;
@@ -340,11 +339,35 @@ int main() {
 
     srand(time(NULL));
 
+    int n;
+    cin >> n;
 
-    int n,k;
-    cin >> n >> k;
+    int mode;
+    cin >> mode;
 
-    cout << solve_by_GA(n,k) << "/" << k << endl;
+    int times = 30;
+
+    int cnt = 0;
+    int atk = 0;
+
+    while(times--) {
+	if(mode == 1) {
+	    vector<int> ret = solve_by_dfs(n);
+	    atk += attack_of_number(ret);
+	    if(attack_of_number(ret) == 0) cnt++;
+	} else if(mode == 2) {
+	    cnt+=solve_by_hc(n, 1, atk);
+	} else {
+	    cnt+=solve_by_GA(n, 1, atk);
+	}
+    }
+
+    cout << "In mode " << mode << endl;
+    cout << "Success rate: " << ((double)cnt/30)*100 << "%" << endl;
+    cout << "Averge attack number " << (double)atk/30 << endl;
+
+    
+
 
     return 0;
 }
