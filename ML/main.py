@@ -11,14 +11,14 @@ test = ALL_DATA[1500:3000, 0:57]
 test_ans = ALL_DATA[1500:3000, 57:58]
 
 clf = svm.SVC()
-clf.fit(test, test_ans)
+clf.fit(train, train_ans)
 
-ans = clf.predict(train)
+ans = clf.predict(test)
 
 cnt = 0
 
 for i in range(1500):
-    if(ans[i] == train_ans[i]):
+    if(ans[i] == test_ans[i]):
         cnt+=1;
 
 
