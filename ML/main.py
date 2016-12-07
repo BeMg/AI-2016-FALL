@@ -1,5 +1,5 @@
 from numpy import genfromtxt
-from sklearn import svm
+from sklearn.neural_network import MLPClassifier
 
 ALL_DATA = genfromtxt('TraData.csv', delimiter=',')
 
@@ -10,7 +10,9 @@ train_ans = ALL_DATA[0:1500, 57:58]
 test = ALL_DATA[1500:3000, 0:57]
 test_ans = ALL_DATA[1500:3000, 57:58]
 
-clf = svm.SVC()
+clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(5, 2), random_state=1)
+
 clf.fit(train, train_ans)
 
 ans = clf.predict(test)
