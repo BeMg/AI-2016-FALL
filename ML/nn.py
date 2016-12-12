@@ -6,9 +6,10 @@ DATA = numpy.genfromtxt('TraData2.csv', delimiter=',')
 idx = 0
 Max_value = 0
 
-test = DATA[2700:3000 , 0:57]
-test_ans = DATA[2700:3000 , 57:58]
+test = numpy.genfromtxt('test.csv', delimiter=',')
+test_ans = numpy.genfromtxt('test_ans.csv', delimiter=',')
 
+#2396 is best
 train = DATA[0:2396 , 0:57]
 train_ans = DATA[0:2396, 57:58]
 
