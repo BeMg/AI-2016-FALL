@@ -8,8 +8,7 @@ from sklearn.neural_network import MLPClassifier
 
 
 DATA2 = numpy.genfromtxt('TraData2.csv', delimiter=',')
-DATA = numpy.genfromtxt('TraData.csv', delimiter=',')
-random.shuffle(DATA)
+DATA = numpy.genfromtxt('Random.csv', delimiter=',')
 
 test = DATA[2700:3000 , 0:57]
 test_ans = DATA[2700:3000 , 57:58]
