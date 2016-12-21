@@ -25,7 +25,7 @@ rf.fit(train, train_ans.ravel())
 ans_rf = rf.predict(test)
 
 dt = tree.DecisionTreeClassifier()
-dt.fit(train, train_ans.ravel())
+dt.fit(train2, train2_ans.ravel())
 ans_dt = dt.predict(test)
 
 clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
