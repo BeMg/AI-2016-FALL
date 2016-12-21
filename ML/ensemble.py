@@ -1,46 +1,63 @@
-from numpy import genfromtxt
+import numpy
+import random
+from sklearn import tree
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPClassifier
 
-DATA = genfromtxt('TraData2.csv', delimiter=',')
-test_data = DATA[2700:3000, 0:57]
-test_ans = DATA[2700:3000, 57:58]
 
-for i in range(1, 50):
-    lower = 0
-    size = int(2700 / i)
-    upper = size
+DATA2 = numpy.genfromtxt('TraData2.csv', delimiter=',')
+DATA = numpy.genfromtxt('TraData.csv', delimiter=',')
+random.shuffle(DATA)
 
-    ans = []
+test = DATA[2700:3000 , 0:57]
+test_ans = DATA[2700:3000 , 57:58]
 
-    for j in range(0, i):
-        data = DATA[lower:upper, 0:57]
-        data_ans = DATA[lower:upper, 57:58]
+train = DATA[0:2700 , 0:57]
+train_ans = DATA[0:2700, 57:58]
 
-        lower += size
-        upper += size
+train2 = DATA2[0:2396 , 0:57]
+train2_ans = DATA2[0:2396, 57:58]
 
-        clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
-                            hidden_layer_sizes=(1, 2), random_state=1, activation='logistic')
+rf =  RandomForestRegressor(random_state=0, n_estimators=1)
+rf.fit(train, train_ans.ravel())
+ans_rf = rf.predict(test)
 
-        clf.fit(data, data_ans.ravel())
-        ans.append(clf.predict(test_data))
+dt = tree.DecisionTreeClassifier()
+dt.fit(train, train_ans.ravel())
+ans_dt = dt.predict(test)
 
-    cnt = 0
+clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                    hidden_layer_sizes=(4, 2), random_state=2, activation='tanh')
+clf.fit(train, train_ans.ravel())
+ans_clf = clf.predict(test)
 
-    for j in range(300):
-        Y = 0
-        N = 0
-        result = 0
-        for k in range(0, i):
-            if ans[k][j] == 1:
-                Y += 1
-            else:
-                N += 1
-            pass
-        if Y > N:
-            result = 1
+ans = {}
+for i in range(300):
+    zero = 0
+    one = 0
+    if(ans_rf[i] == 1):
+        one+=1
+    else:
+        zero+=1
+    if(ans_dt[i] == 1):
+        one+=1
+    else:
+        zero+=1
+    if(ans_clf[i] == 1):
+        one+=1
+    else:
+        zero+=1
 
-        if result == test_ans[j]:
-            cnt+=1
+    if (one > zero):
+        ans[i] = 1
+    else:
+        ans[i] = 0
 
-    print("{}: {}: {}".format(i, int(cnt / 3), size))
+cnt = 0
+for i in range(300):
+    if(test_ans[i] == ans[i]):
+        cnt+=1
+
+print("{}%".format(cnt/300*100))

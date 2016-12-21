@@ -6,7 +6,7 @@ DATA = numpy.genfromtxt('TraData2.csv', delimiter=',')
 idx = 0
 Max_value = 0
 
-test = numpy.genfromtxt('test.csv', delimiter=',')
+test = numpy.genfromtxt('input.csv', delimiter=',')
 test_ans = numpy.genfromtxt('test_ans.csv', delimiter=',')
 
 #2396 is best
@@ -20,10 +20,11 @@ clf.fit(train, train_ans.ravel())
 
 ans = clf.predict(test)
 
+numpy.savetxt('output.csv', ans, delimiter=',', fmt='%d')
 
-cnt = 0
-for i in range(300):
-    if(test_ans[i] == ans[i]):
-        cnt+=1
-
-print("{}%".format(int(cnt/300*100)))
+# cnt = 0
+# for i in range(300):
+#     if(test_ans[i] == ans[i]):
+#         cnt+=1
+#
+# print("{}%".format(int(cnt/300*100)))
