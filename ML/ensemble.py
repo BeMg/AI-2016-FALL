@@ -9,9 +9,10 @@ from sklearn.neural_network import MLPClassifier
 
 DATA2 = numpy.genfromtxt('TraData2.csv', delimiter=',')
 DATA = numpy.genfromtxt('Random.csv', delimiter=',')
+TEST = numpy.genfromtxt('input2.csv', delimiter=',')
 
-test = DATA[2700:3000 , 0:57]
-test_ans = DATA[2700:3000 , 57:58]
+test = TEST[0:300 , 0:57]
+# test_ans = DATA[2700:3000 , 57:58]
 
 train = DATA[0:2700 , 0:57]
 train_ans = DATA[0:2700, 57:58]
@@ -32,7 +33,8 @@ clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
 clf.fit(train, train_ans.ravel())
 ans_clf = clf.predict(test)
 
-ans = {}
+ans = ans_clf
+
 for i in range(300):
     zero = 0
     one = 0
@@ -54,9 +56,11 @@ for i in range(300):
     else:
         ans[i] = 0
 
-cnt = 0
-for i in range(300):
-    if(test_ans[i] == ans[i]):
-        cnt+=1
+numpy.savetxt('output.csv', ans, delimiter=',', fmt='%d')
 
-print("{}%".format(cnt/300*100))
+# cnt = 0
+# for i in range(300):
+#     if(test_ans[i] == ans[i]):
+#         cnt+=1
+#
+# print("{}%".format(cnt/300*100))
